@@ -3,7 +3,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from src.topology import PersistentHomologyCalculation #AlephPersistenHomologyCalculation, \
+from src.topology import PersistentHomologyCalculation, AlephPersistenHomologyCalculation 
 from src.models import submodules
 from src.models.base import AutoencoderModel
 
@@ -96,7 +96,7 @@ class TopologicalSignatureDistance(nn.Module):
     """Topological signature."""
 
     def __init__(self, sort_selected=False, use_cycles=False,
-                 match_edges=None):
+                 match_edges=None, homology=None):
         """Topological signature computation.
 
         Args:
@@ -109,21 +109,21 @@ class TopologicalSignatureDistance(nn.Module):
 
         self.match_edges = match_edges
 
-        # if use_cycles:
-        #     use_aleph = True
-        # else:
-        #     if not sort_selected and match_edges is None:
-        #         use_aleph = True
-        #     else:
-        #         use_aleph = False
+        if use_cycles:
+            use_aleph = True
+        else:
+            if not sort_selected and match_edges is None:
+                use_aleph = True
+            else:
+                use_aleph = False
 
-        # if use_aleph:
-        #     print('Using aleph to compute signatures')
-        ##self.signature_calculator = AlephPersistenHomologyCalculation(
-        ##    compute_cycles=use_cycles, sort_selected=sort_selected)
-        # else:
-        print('Using python to compute signatures')
-        self.signature_calculator = PersistentHomologyCalculation()
+        if use_aleph:
+            print('Using aleph to compute signatures')
+            self.signature_calculator = AlephPersistenHomologyCalculation(
+           compute_cycles=use_cycles, sort_selected=sort_selected)
+        else:
+            print('Using python to compute signatures')
+            self.signature_calculator = PersistentHomologyCalculation()
 
     def _get_pairings(self, distances):
         pairs_0, pairs_1 = self.signature_calculator(
@@ -176,11 +176,19 @@ class TopologicalSignatureDistance(nn.Module):
             distance, dict(additional outputs)
         """
 
+        # from totalpersistence.utils import conematrix
+
+        # if homology is not None:
         # Para forward the cone trick, 
         # distance1, 2 y f -> cone matrix
         # cone matrix -> pairs
         # pairs -> selected_distances
         # loss = max(selected_distances)
+        
+        #  cone_distances = conematrix(distances1, distances2, range(len(distances1)))        
+        #  pairs = self._get_pairings(cone_distances)
+        #  selected_distances = self._select_distances_from_pairs(cone_distances, pairs)
+        #  loss = max(selected_distances)
         
         pairs1 = self._get_pairings(distances1)
         pairs2 = self._get_pairings(distances2)
@@ -203,7 +211,7 @@ class TopologicalSignatureDistance(nn.Module):
             sig2 = self._select_distances_from_pairs(distances2, pairs2)
             distance = self.sig_error(sig1, sig2)
 
-        elif self.match_edges == 'fullmatrix':
+        elif self.match_edges == 'fullmatrix': # que todas las distancias entre puntos se preserven
             distance = ((distances1 - distances2)**2).sum()
 
         elif self.match_edges == 'symmetric':
