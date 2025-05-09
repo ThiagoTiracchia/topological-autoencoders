@@ -2,6 +2,7 @@
 Trying out Tadasets library for generating topological synthetic datasets: 
 Here an overlay of a torus, sphere and swiss roll
 '''
+from IPython import embed as shell
 
 import numpy as np 
 #import tadasets 
@@ -28,6 +29,7 @@ def create_sphere_dataset(n_samples=500, d=100, n_spheres=11, r=5, plot=False, s
 
     #Additional big surrounding sphere:
     n_samples_big = 10*n_samples #int(n_samples/2)
+
     big = dsphere(n=n_samples_big, d=d, r=r*5)
     spheres.append(big)
     n_datapoints += n_samples_big

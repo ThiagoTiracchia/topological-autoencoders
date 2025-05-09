@@ -139,6 +139,8 @@ class TopologicalSignatureDistance(nn.Module):
         if self.use_cycles:
             edges_1 = distance_matrix[(pairs_1[:, 0], pairs_1[:, 1])]
             edges_2 = distance_matrix[(pairs_1[:, 2], pairs_1[:, 3])]
+
+            # tiempo de vida
             edge_differences = edges_2 - edges_1
 
             selected_distances = torch.cat(
@@ -173,6 +175,13 @@ class TopologicalSignatureDistance(nn.Module):
         Returns:
             distance, dict(additional outputs)
         """
+
+        # Para forward the cone trick, 
+        # distance1, 2 y f -> cone matrix
+        # cone matrix -> pairs
+        # pairs -> selected_distances
+        # loss = max(selected_distances)
+        
         pairs1 = self._get_pairings(distances1)
         pairs2 = self._get_pairings(distances2)
 
@@ -193,6 +202,9 @@ class TopologicalSignatureDistance(nn.Module):
             sig1 = self._select_distances_from_pairs(distances1, pairs1)
             sig2 = self._select_distances_from_pairs(distances2, pairs2)
             distance = self.sig_error(sig1, sig2)
+
+        elif self.match_edges == 'fullmatrix':
+            distance = ((distances1 - distances2)**2).sum()
 
         elif self.match_edges == 'symmetric':
             sig1 = self._select_distances_from_pairs(distances1, pairs1)
