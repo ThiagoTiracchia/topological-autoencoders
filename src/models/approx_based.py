@@ -95,8 +95,8 @@ class TopologicallyRegularizedAutoencoder(AutoencoderModel):
 class TopologicalSignatureDistance(nn.Module):
     """Topological signature."""
 
-    def __init__(self, sort_selected=False, use_cycles=False,
-                 match_edges=None, homology=None):
+    def __init__(self, sort_selected=False, mode=False,
+                 match_edges='None'):
         """Topological signature computation.
 
         Args:
@@ -105,14 +105,15 @@ class TopologicalSignatureDistance(nn.Module):
                 or not.
         """
         super().__init__()
-        self.use_cycles = use_cycles
+        self.mode = mode
 
         self.match_edges = match_edges
+        
 
-        if use_cycles:
+        if self.mode == 'aleph_cycles':
             use_aleph = True
         else:
-            if not sort_selected and match_edges is None:
+            if not sort_selected and match_edges == 'None':
                 use_aleph = True
             else:
                 use_aleph = False
@@ -120,7 +121,7 @@ class TopologicalSignatureDistance(nn.Module):
         if use_aleph:
             print('Using aleph to compute signatures')
             self.signature_calculator = AlephPersistenHomologyCalculation(
-           compute_cycles=use_cycles, sort_selected=sort_selected)
+           compute_cycles=True, sort_selected=sort_selected)
         else:
             print('Using python to compute signatures')
             self.signature_calculator = PersistentHomologyCalculation()
@@ -136,7 +137,7 @@ class TopologicalSignatureDistance(nn.Module):
         pairs_0, pairs_1 = pairs
         selected_distances = distance_matrix[(pairs_0[:, 0], pairs_0[:, 1])]
 
-        if self.use_cycles:
+        if self.mode == 'aleph_cycles':
             edges_1 = distance_matrix[(pairs_1[:, 0], pairs_1[:, 1])]
             edges_2 = distance_matrix[(pairs_1[:, 2], pairs_1[:, 3])]
 
@@ -176,20 +177,14 @@ class TopologicalSignatureDistance(nn.Module):
             distance, dict(additional outputs)
         """
 
-        # from totalpersistence.utils import conematrix
-
-        # if homology is not None:
-        # Para forward the cone trick, 
-        # distance1, 2 y f -> cone matrix
-        # cone matrix -> pairs
-        # pairs -> selected_distances
-        # loss = max(selected_distances)
         
-        #  cone_distances = conematrix(distances1, distances2, range(len(distances1)))        
-        #  pairs = self._get_pairings(cone_distances)
-        #  selected_distances = self._select_distances_from_pairs(cone_distances, pairs)
-        #  loss = max(selected_distances)
-        
+            #from totalpersistence.src.totalpersistence.utils.py import conematrix
+            # Para forward the cone trick, 
+            # distance1, 2 y f -> cone matrix
+            # cone matrix -> pairs
+            # pairs -> selected_distances
+            # loss = max(selected_distances)
+                
         pairs1 = self._get_pairings(distances1)
         pairs2 = self._get_pairings(distances2)
 
@@ -197,8 +192,56 @@ class TopologicalSignatureDistance(nn.Module):
             'metrics.matched_pairs_0D': self._count_matching_pairs(
                 pairs1[0], pairs2[0])
         }
+
+        if self.mode == 'totalpersistance':
+            
+            from src.totalpersistence.utils import matrix_size_from_condensed
+            from src.totalpersistence.utils import conematrix
+            from scipy.spatial.distance import squareform
+            ##############################################
+            # consultar parametros cone matrix, esto lo estoy haciendo basandoime en codigo de: kercoker_via_cone
+            #nose que es f, viendo los 2 test que hay en totalpersitance asumi que es de la forma [0,..,0,1,..,1,2,...,2] agarrando la longitud de la distancia mas grande???
+            #todo esto pq nose quien es DY_f pero nada mas quiero que esto corra
+            n= matrix_size_from_condensed(distances1)
+            m= matrix_size_from_condensed(distances2)
+
+            segmento = max(n,m) // 3
+            resto = max(n,m) % 3
+
+            parte_0 = [0] * segmento
+            parte_1 = [1] * segmento
+            parte_2 = [2] * segmento
+            
+            f = parte_0 + parte_1 + parte_2
+            for i in range(resto):
+                f.append(i)
+            f = np.array(f)
+            i, j = np.triu_indices(n, k=1)
+            f_i, f_j = f[i], f[j]
+            indices = np.indices((n, m))
+            i = indices[0].flatten()
+            j = indices[1].flatten()
+            f_i = f[i]
+            DY_fy = np.zeros((n, m))
+            DY_fy[i, j] = squareform(distances2)[f_i, j] ## aca hay un problema pq se esta usando cuda y con el tema de los tensor a numpy rompe todo 
+
+            ###############################################
+            cone_distances = conematrix(distances1, distances2, DY_fy ,range(len(distances1)))        
+
+            pairs = self._get_pairings(cone_distances)
+            selected_distances = self._select_distances_from_pairs(cone_distances, pairs)
+            loss = max(selected_distances) 
+            distance_components['metrics.loss'] = loss  ## esto creo que no va
+            
+    ## si modo es homology , pairings con conematrix y loss maximo
+    # si modo es use_cycles, pairis comun , puede o no usar aleph, no ser full matrix , si none, matchedes o symetric 
+    # o si ciclos, sin o homoology o modo fullmatrx , random excluyente
+    #ciclos/sin ciclos con simetric o none
+    #hacer bash con los 5 experimentos
+
+        
         # Also count matched cycles if present
-        if self.use_cycles:
+        if self.mode == 'aleph_cycles':
             distance_components['metrics.matched_pairs_1D'] = \
                 self._count_matching_pairs(pairs1[1], pairs2[1])
             nonzero_cycles_1 = self._get_nonzero_cycles(pairs1[1])
@@ -206,13 +249,13 @@ class TopologicalSignatureDistance(nn.Module):
             distance_components['metrics.non_zero_cycles_1'] = nonzero_cycles_1
             distance_components['metrics.non_zero_cycles_2'] = nonzero_cycles_2
 
-        if self.match_edges is None:
-            sig1 = self._select_distances_from_pairs(distances1, pairs1)
+        if self.match_edges == 'None':
+            sig1 = self._select_distances_from_pairs(distances1, pairs1)  #None no se puede usar con homology no ? debido a que los pairs es solo con la cone matrix y no con dinstance1 o 2 
             sig2 = self._select_distances_from_pairs(distances2, pairs2)
-            distance = self.sig_error(sig1, sig2)
+            loss = self.sig_error(sig1, sig2)
 
-        elif self.match_edges == 'fullmatrix': # que todas las distancias entre puntos se preserven
-            distance = ((distances1 - distances2)**2).sum()
+        elif self.mode == 'fullmatrix': # que todas las distancias entre puntos se preserven
+            loss = ((distances1 - distances2)**2).sum()
 
         elif self.match_edges == 'symmetric':
             sig1 = self._select_distances_from_pairs(distances1, pairs1)
@@ -227,9 +270,9 @@ class TopologicalSignatureDistance(nn.Module):
             distance_components['metrics.distance1-2'] = distance1_2
             distance_components['metrics.distance2-1'] = distance2_1
 
-            distance = distance1_2 + distance2_1
+            loss = distance1_2 + distance2_1
 
-        elif self.match_edges == 'random':
+        elif self.mode == 'random':
             # Create random selection in oder to verify if what we are seeing
             # is the topological constraint or an implicit latent space prior
             # for compactness
@@ -258,6 +301,6 @@ class TopologicalSignatureDistance(nn.Module):
             distance_components['metrics.distance1-2'] = distance1_2
             distance_components['metrics.distance2-1'] = distance2_1
 
-            distance = distance1_2 + distance2_1
+            loss = distance1_2 + distance2_1
 
-        return distance, distance_components
+        return loss, distance_components

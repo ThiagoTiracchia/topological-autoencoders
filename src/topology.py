@@ -3,7 +3,7 @@ Methods for calculating lower-dimensional persistent homology.
 '''
 
 import numpy as np
-
+import aleph
 
 class UnionFind:
     '''
@@ -145,3 +145,4 @@ class AlephPersistenHomologyCalculation():
                 pairs_1 = pairs_1[indices_1]
 
         return pairs_0, pairs_1
+
