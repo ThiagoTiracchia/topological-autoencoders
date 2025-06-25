@@ -1,0 +1,139 @@
+{
+  "artifacts": [],
+  "command": "train",
+  "experiment": {
+    "base_dir": "/workspace/src/exp",
+    "dependencies": [
+      "numpy==2.2.6",
+      "sacred==0.8.7",
+      "torch==2.5.1+cu121"
+    ],
+    "mainfile": "train_model.py",
+    "name": "training",
+    "repositories": [
+      {
+        "commit": "c43463c1dee1c60ad451f2dd955914f58b6e13b3",
+        "dirty": true,
+        "url": "https://github.com/pabloriera/topological-autoencoders.git"
+      },
+      {
+        "commit": "c43463c1dee1c60ad451f2dd955914f58b6e13b3",
+        "dirty": true,
+        "url": "https://github.com/pabloriera/topological-autoencoders.git"
+      },
+      {
+        "commit": "c43463c1dee1c60ad451f2dd955914f58b6e13b3",
+        "dirty": true,
+        "url": "https://github.com/pabloriera/topological-autoencoders.git"
+      },
+      {
+        "commit": "c43463c1dee1c60ad451f2dd955914f58b6e13b3",
+        "dirty": true,
+        "url": "https://github.com/pabloriera/topological-autoencoders.git"
+      },
+      {
+        "commit": "c43463c1dee1c60ad451f2dd955914f58b6e13b3",
+        "dirty": true,
+        "url": "https://github.com/pabloriera/topological-autoencoders.git"
+      },
+      {
+        "commit": "c43463c1dee1c60ad451f2dd955914f58b6e13b3",
+        "dirty": true,
+        "url": "https://github.com/pabloriera/topological-autoencoders.git"
+      }
+    ],
+    "sources": [
+      [
+        "__init__.py",
+        "_sources/__init___d41d8cd98f00b204e9800998ecf8427e.py"
+      ],
+      [
+        "callbacks.py",
+        "_sources/callbacks_c4a0f3186c1f35ce036d5f0a10127e75.py"
+      ],
+      [
+        "ingredients/__init__.py",
+        "_sources/__init___d41d8cd98f00b204e9800998ecf8427e.py"
+      ],
+      [
+        "ingredients/dataset.py",
+        "_sources/dataset_d4947b7cad908a321c239e895ddef1de.py"
+      ],
+      [
+        "ingredients/model.py",
+        "_sources/model_770142209b37b5e4fa26509bd4bc1aee.py"
+      ],
+      [
+        "train_model.py",
+        "_sources/train_model_81fa9ed7a781c245965400cc19dafc86.py"
+      ]
+    ]
+  },
+  "fail_trace": [
+    "Traceback (most recent call last):\n",
+    "  File \"/usr/local/lib/python3.10/dist-packages/sacred/config/captured_function.py\", line 42, in captured_function\n    result = wrapped(*args, **kwargs)\n",
+    "  File \"/workspace/src/exp/train_model.py\", line 100, in train\n    model.to(device)\n",
+    "  File \"/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py\", line 1340, in to\n    return self._apply(convert)\n",
+    "  File \"/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py\", line 900, in _apply\n    module._apply(fn)\n",
+    "  File \"/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py\", line 900, in _apply\n    module._apply(fn)\n",
+    "  File \"/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py\", line 900, in _apply\n    module._apply(fn)\n",
+    "  File \"/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py\", line 927, in _apply\n    param_applied = fn(param)\n",
+    "  File \"/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py\", line 1326, in convert\n    return t.to(\n",
+    "  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 319, in _lazy_init\n    torch._C._cuda_init()\n",
+    "RuntimeError: Found no NVIDIA driver on your system. Please check that you have an NVIDIA GPU and installed a driver from http://www.nvidia.com/Download/index.aspx\n"
+  ],
+  "heartbeat": "2025-06-25T16:48:58.250440",
+  "host": {
+    "ENV": {},
+    "cpu": "AMD Ryzen 5 5600X 6-Core Processor",
+    "hostname": "b295aea73518",
+    "os": [
+      "Linux",
+      "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35"
+    ],
+    "python_version": "3.10.12"
+  },
+  "meta": {
+    "command": "train",
+    "config_updates": {
+      "device": "cuda"
+    },
+    "named_configs": [
+      "experiments/myexps/Spheres/Aleph.json"
+    ],
+    "options": {
+      "--beat-interval": null,
+      "--capture": null,
+      "--comment": null,
+      "--debug": false,
+      "--enforce_clean": false,
+      "--file_storage": "test_runs",
+      "--force": false,
+      "--help": false,
+      "--id": null,
+      "--loglevel": null,
+      "--mongo_db": null,
+      "--name": null,
+      "--pdb": false,
+      "--print-config": false,
+      "--priority": null,
+      "--queue": false,
+      "--s3": null,
+      "--sql": null,
+      "--tiny_db": null,
+      "--unobserved": false,
+      "COMMAND": null,
+      "UPDATE": [
+        "experiments/myexps/Spheres/Aleph.json",
+        "device=cuda"
+      ],
+      "help": false,
+      "with": true
+    }
+  },
+  "resources": [],
+  "result": null,
+  "start_time": "2025-06-25T16:48:57.678129",
+  "status": "FAILED",
+  "stop_time": "2025-06-25T16:48:58.259647"
+}
