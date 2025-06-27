@@ -196,37 +196,54 @@ class TopologicalSignatureDistance(nn.Module):
         if self.mode == 'totalpersistance':
             
             from src.totalpersistence.utils import matrix_size_from_condensed
-            from src.totalpersistence.utils import conematrix
+            from src.totalpersistence.utils import conematrix,conematrixTorch ,squareform_torch, general_position_distance_matrix,general_position_distance_matrixTorch,lipschitzTorch,to_condensed_form
             from scipy.spatial.distance import squareform
             ##############################################
             # consultar parametros cone matrix, esto lo estoy haciendo basandoime en codigo de: kercoker_via_cone
             #nose que es f, viendo los 2 test que hay en totalpersitance asumi que es de la forma [0,..,0,1,..,1,2,...,2] agarrando la longitud de la distancia mas grande???
             #todo esto pq nose quien es DY_f pero nada mas quiero que esto corra
+
+            #entra una matriz [28,28]
+            #pero en los test se usan antes  : general_position_distance_matrixTorch
+            # print(distances1.shape) =[28,28]
+            distances2 = general_position_distance_matrixTorch(distances2)
+            distances1 = general_position_distance_matrixTorch(distances1) #esto es tal cual esta en los test.
+           # print(distances1.shape) =[378]
             n= matrix_size_from_condensed(distances1)
-            m= matrix_size_from_condensed(distances2)
+            m= matrix_size_from_condensed(distances2) #esto devuelve 8 pero ccreo que deberia ser 28 para que compile conematrix?
+            # print(n) = 28
 
-            segmento = max(n,m) // 3
-            resto = max(n,m) % 3
-
-            parte_0 = [0] * segmento
-            parte_1 = [1] * segmento
-            parte_2 = [2] * segmento
             
-            f = parte_0 + parte_1 + parte_2
-            for i in range(resto):
-                f.append(i)
-            f = np.array(f)
-            i, j = np.triu_indices(n, k=1)
+            device = distances1.device
+            f = torch.arange(m,device=device)   #pasar a torch 
+            eps = 1e-11
+            i, j = torch.triu_indices(n,n,offset=1,device=device)
             f_i, f_j = f[i], f[j]
-            indices = np.indices((n, m))
+
+            rows = torch.arange(n,device=device)
+            cols = torch.arange(m,device=device)
+            grid_y, grid_x = torch.meshgrid(rows, cols, indexing='ij')
+            indices = torch.stack((grid_y, grid_x))  # Forma (2, n, m)
+
             i = indices[0].flatten()
             j = indices[1].flatten()
             f_i = f[i]
-            DY_fy = np.zeros((n, m))
-            DY_fy[i, j] = squareform(distances2)[f_i, j] ## aca hay un problema pq se esta usando cuda y con el tema de los tensor a numpy rompe todo 
+            DY_fy = torch.zeros((n, m),device=device)
+            
+            
+            
+            
+            
+            DY_fy[i, j] = squareform_torch( distances2 )[f_i, j] ## aca hay un problema pq se esta usando cuda y con el tema de los tensor a numpy rompe todo
+            
+           # f_pos = to_condensed_form(f_i, f_j, m)
+            #dY_ff = dY[f_pos.astype(int)]
+            #L = lipschitzTorch(distances1, dY_ff)
+            #dY = dY / L 
 
+            
             ###############################################
-            cone_distances = conematrix(distances1, distances2, DY_fy ,range(len(distances1)))        
+            cone_distances = conematrixTorch(squareform_torch(distances1), squareform_torch(distances2), DY_fy ,eps)        
 
             pairs = self._get_pairings(cone_distances)
             selected_distances = self._select_distances_from_pairs(cone_distances, pairs)

@@ -52,7 +52,7 @@ def kercoker_via_cone(dX, dY, f, maxdim=1, cone_eps=0, tol=1e-11):
     m = matrix_size_from_condensed(dY)
 
     f = np.array(f)
-
+    
     # dY_ff = d(f(x_i),f(x_j)) para todo i,j
     i, j = np.triu_indices(n, k=1)
     f_i, f_j = f[i], f[j]

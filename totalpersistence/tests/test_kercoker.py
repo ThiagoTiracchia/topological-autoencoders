@@ -7,11 +7,11 @@ def test_kercoker_via_cone():
     X = np.array([[0, 0], [0, 1], [1, 0], [1, 1], [2, 0], [2, 1]])
     Y = np.array([[0, 2], [1, 2], [2, 2]])
     f = np.array([0, 0, 1, 1, 2, 2])
-
+    
     # Compute perturbed distance matrices
     dX = general_position_distance_matrix(X, perturb=1e-13)
     dY = general_position_distance_matrix(Y, perturb=1e-13)
-
+   
     # Run the function
     coker_dgm, ker_dgm, cone_dgm, dgmX, dgmY = kercoker_via_cone(dX, dY, f, maxdim=2, cone_eps=0)
 
