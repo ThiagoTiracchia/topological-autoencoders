@@ -30,3 +30,7 @@ def test_totalpersistence_basic():
     # The distance should be non-negative
     assert all(d >= 0 for d in coker_bottleneck_distances)
     assert all(d >= 0 for d in ker_bottleneck_distances)
+
+
+
+test_totalpersistence_basic()

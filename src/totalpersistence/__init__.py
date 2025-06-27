@@ -4,8 +4,8 @@
 #   -------------------------------------------------------------
 """Python Package Template"""
 from __future__ import annotations
-from .utils import conematrix, matrix_size_from_condensed
+from .utils import conematrix, matrix_size_from_condensed,conematrixTorch,squareform_torch , general_position_distance_matrix ,general_position_distance_matrixTorch,lipschitzTorch,to_condensed_form
 from .totalpersistence import totalpersistence, kercoker_via_cone
 __version__ = "0.0.2"
 
-__all__ = ['conematrix', 'matrix_size_from_condensed']
+__all__ = ['conematrix', 'matrix_size_from_condensed','conematrixTorch','squareform_torch','general_position_distance_matrix','general_position_distance_matrixTorch','lipschitzTorch','to_condensed_form']
