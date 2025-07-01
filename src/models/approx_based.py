@@ -192,7 +192,7 @@ class TopologicalSignatureDistance(nn.Module):
             'metrics.matched_pairs_0D': self._count_matching_pairs(
                 pairs1[0], pairs2[0])
         }
-
+        loss = 0
         if self.mode == 'totalpersistance':
             
             from src.totalpersistence.utils import matrix_size_from_condensed
@@ -271,7 +271,7 @@ class TopologicalSignatureDistance(nn.Module):
             sig2 = self._select_distances_from_pairs(distances2, pairs2)
             loss = self.sig_error(sig1, sig2)
 
-        elif self.mode == 'fullmatrix': # que todas las distancias entre puntos se preserven
+        elif self.match_edges == 'fullmatrix': # que todas las distancias entre puntos se preserven
             loss = ((distances1 - distances2)**2).sum()
 
         elif self.match_edges == 'symmetric':
@@ -319,5 +319,6 @@ class TopologicalSignatureDistance(nn.Module):
             distance_components['metrics.distance2-1'] = distance2_1
 
             loss = distance1_2 + distance2_1
-
+        if 'loss' not in locals():
+            raise RuntimeError
         return loss, distance_components
