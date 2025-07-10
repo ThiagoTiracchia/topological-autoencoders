@@ -18,7 +18,7 @@
     "save_latents": true,
     "save_training_latents": false
   },
-  "learning_rate": 0.000272683866289072,
+  "learning_rate": 0.0001,
   "model": {
     "__doc__": "Model configuration.",
     "name": "TopologicallyRegularizedAutoencoder",

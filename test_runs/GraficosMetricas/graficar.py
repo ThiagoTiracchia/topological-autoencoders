@@ -92,7 +92,7 @@ def graficar_loss(datos,nombreDeMetrica ):
                 color=colors[i],
                 linewidth=2,
                 alpha=0.8)
-    
+    plt.yscale('log')
     plt.title(f'Comparación de {nombreDeMetrica}', fontsize=16)
     plt.xlabel('Steps', fontsize=14)
     plt.ylabel('Value', fontsize=14)
