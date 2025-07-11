@@ -12,32 +12,32 @@
     "name": "training",
     "repositories": [
       {
-        "commit": "d5710c8bfda7fe04d2b13eb4fc9cb6868ff74be3",
+        "commit": "522d04994b0aef4ba351eccf36690cbb6944a00d",
         "dirty": true,
         "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
       },
       {
-        "commit": "d5710c8bfda7fe04d2b13eb4fc9cb6868ff74be3",
+        "commit": "522d04994b0aef4ba351eccf36690cbb6944a00d",
         "dirty": true,
         "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
       },
       {
-        "commit": "d5710c8bfda7fe04d2b13eb4fc9cb6868ff74be3",
+        "commit": "522d04994b0aef4ba351eccf36690cbb6944a00d",
         "dirty": true,
         "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
       },
       {
-        "commit": "d5710c8bfda7fe04d2b13eb4fc9cb6868ff74be3",
+        "commit": "522d04994b0aef4ba351eccf36690cbb6944a00d",
         "dirty": true,
         "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
       },
       {
-        "commit": "d5710c8bfda7fe04d2b13eb4fc9cb6868ff74be3",
+        "commit": "522d04994b0aef4ba351eccf36690cbb6944a00d",
         "dirty": true,
         "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
       },
       {
-        "commit": "d5710c8bfda7fe04d2b13eb4fc9cb6868ff74be3",
+        "commit": "522d04994b0aef4ba351eccf36690cbb6944a00d",
         "dirty": true,
         "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
       }
@@ -49,7 +49,7 @@
       ],
       [
         "callbacks.py",
-        "_sources/callbacks_c4a0f3186c1f35ce036d5f0a10127e75.py"
+        "_sources/callbacks_08e457bfd17174d03abd86ae713970ea.py"
       ],
       [
         "ingredients/__init__.py",
@@ -69,7 +69,7 @@
       ]
     ]
   },
-  "heartbeat": "2025-07-10T20:25:49.872382",
+  "heartbeat": "2025-07-11T22:31:34.262703",
   "host": {
     "ENV": {},
     "cpu": "AMD Ryzen 5 5600X 6-Core Processor",
@@ -96,7 +96,7 @@
       "device": "cuda"
     },
     "named_configs": [
-      "experiments/myexps/Spheres/Symetrics.json"
+      "experiments/myexps/SwissRoll/Symetrics.json"
     ],
     "options": {
       "--beat-interval": null,
@@ -121,7 +121,7 @@
       "--unobserved": false,
       "COMMAND": null,
       "UPDATE": [
-        "experiments/myexps/Spheres/Symetrics.json",
+        "experiments/myexps/SwissRoll/Symetrics.json",
         "device=cuda"
       ],
       "help": false,
@@ -133,37 +133,37 @@
     "training.loss": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 0.997135285090806
+      "value": 0.15913143080736822
     },
     "training.loss.autoencoder": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 0.8867738100227166
+      "value": 0.14375211036531255
     },
     "training.loss.topo_error": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 0.25453697349237875
+      "value": 0.03547076117926432
     },
     "training.metrics.distance1-2": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 1.469197120064887
+      "value": 0.37870353762991726
     },
     "training.metrics.distance2-1": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 5.657837815002489
+      "value": 0.614477732218802
     },
     "training.metrics.matched_pairs_0D": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 6.5046728971962615
+      "value": 15.536458333333334
     },
     "training.reconstruction_error": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 0.8867738100227166
+      "value": 0.14375211036531255
     },
     "validation_continuity": {
       "byteorder": "<",
@@ -172,67 +172,67 @@
       "shape": [
         20
       ],
-      "values": "eJwBoABf/wnzXelLVuk/4bcsmM5t6T+RpLs9EonpPwpwP6Vum+k/pn22almp6T+8zc49GKDpPwfB8Q4UfOk/zcXGXQhF6T/ZaSrgYxPpP9NJcjeT7Og/LKWqec/P6D83xS0ItrzoPw4eyZVXreg/fh59IMSi6D8a1GXFkJjoP1HyhFWojeg/mUoBbvWG6D8hlCvVB3/oP7TdsJvbd+g/us3pqh5z6D/uIVOD"
+      "values": "eJwBoABf/x53rgBSfe8/6Ln3bwo57z88xD/Km+zuP03lvYP9qe4/7aIq+7dv7j9eKGLNNUDuPwDjEBprEO4/I84FLNzf7T/nw1CcNa/tP+GsL1kpfe0/3bNaW1ZR7T+8LzQThSvtP7out3m/CO0/b1kqHS3p7D9KofAzP8vsP82rAZB/sOw/96p/rQyY7D+J+Er1nIHsPxC4jTZ5aew/yz4iwltT7D/JU1GN"
     },
     "validation_density_global": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 0.8115829606273133
+      "value": 0.11281472232532572
     },
     "validation_density_kl_global": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 0.414282271659009
+      "value": 0.010009395519282361
     },
     "validation_density_kl_global_0001": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 0.40110848333176097
+      "value": 0.09806785345042227
     },
     "validation_density_kl_global_001": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 0.14256043963073461
+      "value": 0.04889332196294701
     },
     "validation_density_kl_global_01": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 0.414282271659009
+      "value": 0.010009395519282361
     },
     "validation_density_kl_global_1": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 0.008339401146783013
+      "value": 0.0004809886932986972
     },
     "validation_density_kl_global_10": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 8.351429448874486e-05
+      "value": 5.817537822242506e-06
     },
     "validation_mean_continuity": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 0.7810970885858253
+      "value": 0.9247714794841542
     },
     "validation_mean_mrre": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 0.2961033003307894
+      "value": 0.041441215818899445
     },
     "validation_mean_neighbourhood_loss": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 0.6866242877908286
+      "value": 0.312811662147532
     },
     "validation_mean_rank_correlation": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 0.18399035407799297
+      "value": 0.6260564263008673
     },
     "validation_mean_trustworthiness": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 0.6230459953907657
+      "value": 0.9489795518848345
     },
     "validation_mrre": {
       "byteorder": "<",
@@ -242,7 +242,7 @@
         20,
         2
       ],
-      "values": "eJwBQAG//rR2brmDxtc//p1L2abcyj9l7Hz0xJ/XP8xvObHx3so/R4HbmyKM1z+RHcP7/9nKPxIYalTUftc/xjvI5KTbyj9CCan7ynbXP+Z3X+F04Mo/JxFAY5eC1z/uX6h09vbKP/e/SzJApdc/qqgmozMhyz+zb0jFANLXP0pVlOmmWcs/gY7EtOz21z/84KjkdJHLP+jhYF+KE9g/aX+MK8nDyz84Utl6mCjYP3M+WkMl8Ms/VRRc3Qk22D8DeBXmZRbMP5VSlOw4Qtg/O9CEokE6zD8/U8I4wEjYPwLgOPbFWsw/eyIeveJN2D/jZHkfo3rMP8KhtcQ8Utg/LInm0W6azD/Ihov2eVXYP0ezy+wut8w/noahVsVY2D9PIGLeMNTMP5QUsJiJW9g/udcLVD7wzD8HE6Vmpl7YPwD077R3Cs0/xYqpPg=="
+      "values": "eJwBQAG//kPCtsvrXZo/Kxe3M0NQiT9jXOJHkc2cP+rGaXWor5E/hLCDvfLxnj/43NIxCzSWPwAnYqayfKA/UAJT86YSmj9FhU2p4n6hP5U8C8MKfJ0/SBGLjX5goj9cAqGgfDWgP7LEfzWhRqM/isIFRoucoT+kfPMQ2h+kPzkJDbqM9qI/tvFYMrTvpD/+AzcaVEWkPwjIi4K0wKU/qA4Qn/mLpT+mBqK3+oGmPy7FSL0Wt6Y/DrBPjYI5pz8QLQV21MinP0Zt57pR56c/bQqLo6DJqD8NbeDs342oPyWqkm5puak/7jJM0N0tqT8JcEKuXpyqP0+pDMoKyak/QlCtJnpwqz8Q93oCZmSqPyZgj6+oN6w/OdSmKp3+qj91U+ET+fSsP2aqEsEilas/+9BIbwStrT/OAIWKdyisP4xXLHDTXK4/QTWXYw=="
     },
     "validation_neighbourhood_loss": {
       "byteorder": "<",
@@ -251,7 +251,7 @@
       "shape": [
         20
       ],
-      "values": "eJwBoABf//1HpROTI+0/BMMbDpq/6j8YUtX3DnDoP7ErQO41F+Y/gvPkJIDD4z9z270X6THiP46NI7cjIOI/lM/h0Z9L4z/Ytz0T41fkP+tUL3AXJeU/yPOVNgS55T88AJPyHhjmP7K7URjoSuY/73GFvT5S5j8TkHek9EXmP34Oj/5cKuY/Hgp9ePwI5j+6gLrZ+uTlPwRcrglTwOU/3CroqAab5T8KIlB/"
+      "values": "eJwBoABf/4LPf4XgkNY/fhYeQi2K0z+slChnUOTSP5iAb15NPNM/SkT/0A4O1D88WY6K+ILUP7zSUqp3otQ/VvwUSka01D/G9/byn5XUP16C1kzln9Q/nH3HZlul1D9m66r4KZTUP4RofSCnZtQ/zAZV5IMn1D/eTe/6/t7TP8ING5o1mNM/wtWJIfJQ0z/S5KmR3gvTP5xgAfNC1tI/jI0qYTGb0j9SbVT2"
     },
     "validation_rank_correlation": {
       "byteorder": "<",
@@ -260,17 +260,17 @@
       "shape": [
         20
       ],
-      "values": "eJwBoABf/0IS3x7zlIc/hy4mzXk1iD9P7r1ZPgSGP/xyg+9Fio0/UNRinvjWkD81vb5AuWKmP8vo5oSeZrk/7maUH6e5xT9hOMmtL9XLP0NEMw9Wmc8/iQIyKFPy0D+pkWokJIrRP2hV2/Oa69E/rgg49jAZ0j9c7T2o3T3SP0EFN8sbbdI/jUs/VY540j/lejur3pPSP9n3CBKIrdI/89jlh3e50j+hs0/y"
+      "values": "eJwBoABf//iEuxubS+E/SohBDj7m4j/lm8s0kRrkPycVONtdxOQ/E56H4v8P5T9JdeCyqiblPyd5rRrtFeU/MAFILi/35D97MLLZbMTkP/gGse7HluQ/qGLzaYhv5D+xHBiSQUTkPz51NhEeGuQ/DOx3Jmv14z/enxoDL9TjPzDyvj/EsuM/WQ/JyC6V4z+vscnsLnPjP3lU5LD1YOM/My88/bdJ4z/XeVAe"
     },
     "validation_rmse": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 13.693143809336158
+      "value": 1.6318551542673752
     },
     "validation_stress": {
       "dtype": "float64",
       "py/object": "numpy.float64",
-      "value": 16.103994294446245
+      "value": 1.8621029935138675
     },
     "validation_trustworthiness": {
       "byteorder": "<",
@@ -279,10 +279,10 @@
       "shape": [
         20
       ],
-      "values": "eJwBoABf//Ya4qq+TOQ/hUEfr6eD5D9I4LCg/6TkP2H7w77Ov+Q/e18W8P3R5D9kwyQohLbkP6I5nqnHZOQ/ZIR+uXT94z9Zq2CMZ7DjP/IY6hEEfeM/1pnEE7Bg4z8irUErYFrjP8CdfJppV+M/sFGdCXtl4z+2mfvesHbjP8zHJKLVieM/bEphX6uf4z9oBC13ArTjPyaClQVuyeM/6EXHB+Xc4z/vYVYj"
+      "values": "eJwBoABf/2LoXnK7Ne8/tehZEAob7z8M8qIIjgDvP91i5/mz5O4/+c4TLcjG7j/n68z7FbHuP1jVyfIrmO4/KPpe0S2C7j8pzB8tCW3uP5U1u0adVO4/b4fjBV9A7j/90rWNoy7uP+fYCShMH+4/vQujkysR7j9p6mNhWQTuPycY0zou9+0/3lwQcqzn7T9sZmDgNNbtPwwRBsKNxO0/XM2vZ3ix7T+J1FKY"
     }
   },
-  "start_time": "2025-07-10T20:19:10.715762",
+  "start_time": "2025-07-11T22:29:11.171034",
   "status": "COMPLETED",
-  "stop_time": "2025-07-10T20:25:49.859718"
+  "stop_time": "2025-07-11T22:31:34.253199"
 }

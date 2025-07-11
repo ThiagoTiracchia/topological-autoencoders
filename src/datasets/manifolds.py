@@ -43,7 +43,7 @@ class SwissRoll(ManifoldDataset):
     def __init__(self, train=True, n_samples=6000, noise=0.05,
                  test_fraction=0.1, seed=42):
         _rnd = np.random.RandomState(seed)
-        data, pos = make_swiss_roll(n_samples, noise, seed)
+        data, pos = make_swiss_roll(n_samples=n_samples, noise=noise, random_state=seed, hole=True) #aca tuve que sacarle el noise, seed debido a que me tira que hay muchos argumentos
         data = data.astype(np.float32)
         pos = pos.astype(np.float32)
         super().__init__(data, pos, train, test_fraction, _rnd)

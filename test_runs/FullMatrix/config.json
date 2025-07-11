@@ -2,7 +2,7 @@
   "batch_size": 28,
   "dataset": {
     "__doc__": "Dataset configuration.",
-    "name": "Spheres",
+    "name": "SwissRoll",
     "parameters": {}
   },
   "device": "cuda",
@@ -23,7 +23,7 @@
     "__doc__": "Model configuration.",
     "name": "TopologicallyRegularizedAutoencoder",
     "parameters": {
-      "autoencoder_model": "MLPAutoencoder_Spheres",
+      "autoencoder_model": "MLPAutoencoder",
       "lam": 0.43357738971723536,
       "toposig_kwargs": {
         "match_edges": "fullmatrix"

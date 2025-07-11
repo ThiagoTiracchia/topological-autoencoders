@@ -27,7 +27,8 @@ def obtener_metricas(carpeta_principal):
         print(f"Error: La ruta no es una carpeta: {carpeta_absoluta}")
         return metricas
     
-    for root, dirs, files in os.walk(carpeta_absoluta):
+    for root, dirs, files in os.walk(carpeta_absoluta):  ##hay que arreglar a que  nose meta en subcarpetas
+        
         if 'metrics.json' in files:
             ruta_metrics = os.path.join(root, 'metrics.json')
             nombre_subcarpeta = os.path.basename(root)
