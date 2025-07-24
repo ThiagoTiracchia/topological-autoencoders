@@ -6,7 +6,41 @@ import torch.nn as nn
 from src.topology import PersistentHomologyCalculation, AlephPersistenHomologyCalculation 
 from src.models import submodules
 from src.models.base import AutoencoderModel
+from totalpersistence import utils as tp
 
+
+
+
+
+import csv
+class DebugLogger:
+    def __init__(self, filename="debug_log.csv"):
+        self.filename = filename
+        self.forward = 0
+        self._initialize_file()
+
+    def _initialize_file(self):
+        """Crea el archivo CSV con cabeceras si no existe."""
+        try:
+            with open(self.filename, 'x', newline='') as file:  # 'x' falla si el archivo existe
+                writer = csv.writer(file)
+                writer.writerow(['Epoch', 'Timestamp', 'Params'])  # Cabecera básica
+        except FileExistsError:
+            # Si el archivo ya existe, leemos el último epoch
+            with open(self.filename, 'r') as file:
+                last_line = list(csv.reader(file))[-1]
+                self.epoch = int(last_line[0]) if last_line[0].isdigit() else 0
+
+    def log(self, **params):
+        """Agrega una fila al CSV con los parámetros."""
+        self.forward += 1
+        
+        if self.forward % 1000 == 0: 
+            with open(self.filename, 'a', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow([self.forward, *params.values()])
+            
+            print(f"Log forward {self.forward} registrado.")
 
 class TopologicallyRegularizedAutoencoder(AutoencoderModel):
     """Topologically regularized autoencoder."""
@@ -28,6 +62,7 @@ class TopologicallyRegularizedAutoencoder(AutoencoderModel):
         self.autoencoder = getattr(submodules, autoencoder_model)(**ae_kwargs)
         self.latent_norm = torch.nn.Parameter(data=torch.ones(1),
                                               requires_grad=True)
+        
 
     @staticmethod
     def _compute_distance_matrix(x, p=2):
@@ -96,7 +131,7 @@ class TopologicalSignatureDistance(nn.Module):
     """Topological signature."""
 
     def __init__(self, sort_selected=False, mode=False,
-                 match_edges='None'):
+                 match_edges='None',with_cycles= False ):
         """Topological signature computation.
 
         Args:
@@ -106,14 +141,15 @@ class TopologicalSignatureDistance(nn.Module):
         """
         super().__init__()
         self.mode = mode
-
+        self.with_cycles = with_cycles
         self.match_edges = match_edges
+        self.logger = DebugLogger()
         
 
-        if self.mode == 'aleph_cycles':
+        if self.with_cycles == True: # TODO aceptar combinaciones de Aleph
             use_aleph = True
         else:
-            if not sort_selected and match_edges == 'None':
+            if not sort_selected and match_edges == 'default': # ojo esto #
                 use_aleph = True
             else:
                 use_aleph = False
@@ -137,7 +173,7 @@ class TopologicalSignatureDistance(nn.Module):
         pairs_0, pairs_1 = pairs
         selected_distances = distance_matrix[(pairs_0[:, 0], pairs_0[:, 1])]
 
-        if self.mode == 'aleph_cycles':
+        if self.mode == 'xy':
             edges_1 = distance_matrix[(pairs_1[:, 0], pairs_1[:, 1])]
             edges_2 = distance_matrix[(pairs_1[:, 2], pairs_1[:, 3])]
 
@@ -184,18 +220,18 @@ class TopologicalSignatureDistance(nn.Module):
             # cone matrix -> pairs
             # pairs -> selected_distances
             # loss = max(selected_distances)
-                
-        pairs1 = self._get_pairings(distances1)
-        pairs2 = self._get_pairings(distances2)
-
-        distance_components = {
-            'metrics.matched_pairs_0D': self._count_matching_pairs(
-                pairs1[0], pairs2[0])
-        }
+        distance_components = {} 
+      
         loss = 0
-        if self.mode == 'totalpersistance':
+
+        if self.mode != 'cone':        
+            pairs1 = self._get_pairings(distances1)
+            pairs2 = self._get_pairings(distances2)
+            distance_components['metrics.matched_pairs_0D'] = self._count_matching_pairs(
+                    pairs1[0], pairs2[0])
+        elif self.mode == 'cone':
+            # -TODO- cambiar interfaz , nueva variable, persistance type
             
-            from totalpersistence import utils as tp
             ##############################################
             
             distances2 = tp.general_position_distance_matrix_torch(distances2)
@@ -203,12 +239,21 @@ class TopologicalSignatureDistance(nn.Module):
 
             
             ###############################################
-            cone_distances = tp.conematrix_torch(distances1, distances2,cone_eps=0.0)        
+            cone_distances, L = tp.conematrix_torch(distances1, distances2,cone_eps=0.0)        
 
             pairs = self._get_pairings(cone_distances)
+            #
             selected_distances = self._select_distances_from_pairs(cone_distances, pairs)
-            loss = max(selected_distances) 
-            distance_components['metrics.loss'] = loss  ## esto creo que no va
+            #frenar aca
+            
+            loss = torch.max(selected_distances) 
+            if DEBUG== True:
+                self.logger.log(param1=selected_distances,param2=pairs,param3=cone_distances,param4=loss,param5=L,param6=distances2)
+                   
+            distance_components['metrics.loss'] = loss
+            distance_components['metrics.Lips'] = L   
+            distance_components['metrics.MaxDx'] = torch.max(distances1) 
+            distance_components['metrics.MaxDy'] = torch.max(distances2) 
             
     ## si modo es homology , pairings con conematrix y loss maximo
     # si modo es use_cycles, pairis comun , puede o no usar aleph, no ser full matrix , si none, matchedes o symetric 
@@ -218,7 +263,7 @@ class TopologicalSignatureDistance(nn.Module):
 
         
         # Also count matched cycles if present
-        if self.mode == 'aleph_cycles':
+        if self.mode == 'xy':
             distance_components['metrics.matched_pairs_1D'] = \
                 self._count_matching_pairs(pairs1[1], pairs2[1])
             nonzero_cycles_1 = self._get_nonzero_cycles(pairs1[1])
@@ -226,7 +271,7 @@ class TopologicalSignatureDistance(nn.Module):
             distance_components['metrics.non_zero_cycles_1'] = nonzero_cycles_1
             distance_components['metrics.non_zero_cycles_2'] = nonzero_cycles_2
 
-        if self.match_edges == 'None':
+        if self.match_edges == 'default':
             sig1 = self._select_distances_from_pairs(distances1, pairs1)  #None no se puede usar con homology no ? debido a que los pairs es solo con la cone matrix y no con dinstance1 o 2 
             sig2 = self._select_distances_from_pairs(distances2, pairs2)
             loss = self.sig_error(sig1, sig2)
@@ -282,3 +327,12 @@ class TopologicalSignatureDistance(nn.Module):
         if 'loss' not in locals():
             raise RuntimeError
         return loss, distance_components
+
+
+DEBUG = True
+def log(*args, **kwargs):
+    """
+    Log messages if DEBUG is True.
+    """
+    if DEBUG:
+        print(*args, **kwargs)
