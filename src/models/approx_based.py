@@ -1,4 +1,5 @@
 """Topolologically regularized autoencoder using approximation."""
+import pickle
 import numpy as np
 import torch
 import torch.nn as nn
@@ -8,41 +9,58 @@ from src.models import submodules
 from src.models.base import AutoencoderModel
 from totalpersistence import utilsTorch as tp
 
-
-
-
-
 import csv
 
 DEBUG = True
+LOG_INTERVAL = 1
+
+
+def log(*args, **kwargs):
+    """
+    Log messages if DEBUG is True.
+    """
+    if DEBUG:
+        print(*args, **kwargs)
+
 class DebugLogger:
-    def __init__(self, filename="debug_logSpheres.csv"):
+    def __init__(self, filename="debug_log.pkl"):
         self.filename = filename
-        self.forward = 0
-        self._initialize_file()
+        # self._initialize_file()
+        self.items = []
 
-    def _initialize_file(self):
-        """Crea el archivo CSV con cabeceras si no existe."""
-        try:
-            with open(self.filename, 'x', newline='') as file:  # 'x' falla si el archivo existe
-                writer = csv.writer(file)
-                writer.writerow(['Epoch', 'Timestamp', 'Params'])  # Cabecera básica
-        except FileExistsError:
-            # Si el archivo ya existe, leemos el último epoch
-            with open(self.filename, 'r') as file:
-                last_line = list(csv.reader(file))[-1]
-                self.epoch = int(last_line[0]) if last_line[0].isdigit() else 0
+    # def _initialize_file(self):
+    #     """Crea el archivo CSV con cabeceras si no existe."""
+    #     try:
+    #         with open(self.filename, 'x', newline='') as file:  # 'x' falla si el archivo existe
+    #             writer = csv.writer(file)
+    #             writer.writerow(['Epoch', 'Timestamp', 'Params'])  # Cabecera básica
+    #     except FileExistsError:
+    #         # Si el archivo ya existe, leemos el último epoch
+    #         with open(self.filename, 'r') as file:
+    #             last_line = list(csv.reader(file))[-1]
+    #             self.epoch = int(last_line[0]) if last_line[0].isdigit() else 0
+    
+    
+    def log(self, dict_params, step):
+        """Append to list and save pickle"""
+        for k,v in dict_params.items():
+            self.items.append({"step": step, "param": k, "value": v})
+        with open(self.filename, 'wb') as file:
+            pickle.dump(self.items, file)
 
-    def log(self, **params):
-        """Agrega una fila al CSV con los parámetros."""
-        self.forward += 1
+    # def _log(self, **params):
+    #     """Agrega una fila al CSV con los parámetros."""
+    #     self.forward += 1
         
-        if self.forward % 1000 == 0: 
-            with open(self.filename, 'a', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow([self.forward, *params.values()])
+    #     if self.forward % 1000 == 0: 
+    #         with open(self.filename, 'a', newline='') as file:
+    #             writer = csv.writer(file)
+    #             writer.writerow([self.forward, *params.values()])
             
-            print(f"Log forward {self.forward} registrado.")
+    #         print(f"Log forward {self.forward} registrado.")
+
+
+logger = DebugLogger()
 
 class TopologicallyRegularizedAutoencoder(AutoencoderModel):
     """Topologically regularized autoencoder."""
@@ -64,6 +82,8 @@ class TopologicallyRegularizedAutoencoder(AutoencoderModel):
         self.autoencoder = getattr(submodules, autoencoder_model)(**ae_kwargs)
         self.latent_norm = torch.nn.Parameter(data=torch.ones(1),
                                               requires_grad=True)
+    
+        self.count_forward = 0
         
 
     @staticmethod
@@ -83,6 +103,13 @@ class TopologicallyRegularizedAutoencoder(AutoencoderModel):
 
         """
         latent = self.autoencoder.encode(x)
+        self.count_forward += 1
+
+        if self.count_forward % LOG_INTERVAL == 0:
+            logger.log({
+                "x": x.to("cpu").detach().numpy(),
+                "latent": latent.to("cpu").detach().numpy()
+            }, step=self.count_forward)
 
         x_distances = self._compute_distance_matrix(x)
 
@@ -145,21 +172,15 @@ class TopologicalSignatureDistance(nn.Module):
         self.mode = mode
         self.with_cycles = with_cycles
         self.match_edges = match_edges
-        self.logger = DebugLogger()
-        
+        self.count_forward = 0
 
-        if self.with_cycles == True: # TODO aceptar combinaciones de Aleph
+        if self.with_cycles:
             use_aleph = True
-        else:
-            if not sort_selected and match_edges == 'default': # ojo esto #
-                use_aleph = True
-            else:
-                use_aleph = False
 
         if use_aleph:
             print('Using aleph to compute signatures')
-            self.signature_calculator = AlephPersistenHomologyCalculation(
-           compute_cycles=True, sort_selected=sort_selected)
+            assert not sort_selected
+            self.signature_calculator = AlephPersistenHomologyCalculation(compute_cycles=True, sort_selected=sort_selected)
         else:
             print('Using python to compute signatures')
             self.signature_calculator = PersistentHomologyCalculation()
@@ -173,9 +194,9 @@ class TopologicalSignatureDistance(nn.Module):
     def _select_distances_from_pairs(self, distance_matrix, pairs):
         # Split 0th order and 1st order features (edges and cycles)
         pairs_0, pairs_1 = pairs
-        selected_distances = distance_matrix[(pairs_0[:, 0], pairs_0[:, 1])]
+        selected_distances = distance_matrix[(pairs_0[:, 0], pairs_0[:, 1])]                             
 
-        if self.mode == 'xy':####!!!        if self.use_cycles: !!!!######
+        if self.with_cycles:
             edges_1 = distance_matrix[(pairs_1[:, 0], pairs_1[:, 1])]
             edges_2 = distance_matrix[(pairs_1[:, 2], pairs_1[:, 3])]
 
@@ -215,30 +236,24 @@ class TopologicalSignatureDistance(nn.Module):
             distance, dict(additional outputs)
         """
 
-        
-            #from totalpersistence.src.totalpersistence.utils.py import conematrix
-            # Para forward the cone trick, 
-            # distance1, 2 y f -> cone matrix
-            # cone matrix -> pairs
-            # pairs -> selected_distances
-            # loss = max(selected_distances)
+        #from totalpersistence.src.totalpersistence.utils.py import conematrix
+        # Para forward the cone trick, 
+        # distance1, 2 y f -> cone matrix
+        # cone matrix -> pairs
+        # pairs -> selected_distances
+        # loss = max(selected_distances)
+
         distance_components = {} 
       
         loss = 0
 
-        if self.mode != 'cone':        
-            pairs1 = self._get_pairings(distances1)
-            pairs2 = self._get_pairings(distances2)
-            distance_components['metrics.matched_pairs_0D'] = self._count_matching_pairs(
-                    pairs1[0], pairs2[0])
-        elif self.mode == 'cone':
+        if self.mode == 'cone':
             # -TODO- cambiar interfaz , nueva variable, persistance type
             
             ##############################################
             
             distances2 = tp.general_position_distance_matrix_torch(distances2)
             distances1 = tp.general_position_distance_matrix_torch(distances1) #esto es tal cual esta en los test.
-
             
             ###############################################
             cone_distances, L = tp.conematrix_torch(distances1, distances2,cone_eps=0.0)        
@@ -246,26 +261,44 @@ class TopologicalSignatureDistance(nn.Module):
             pairs = self._get_pairings(cone_distances)
             #
             selected_distances = self._select_distances_from_pairs(cone_distances, pairs)
-            #frenar aca
-            
-            loss = torch.max(selected_distances) 
-            if DEBUG== True:
-                self.logger.log(param1=selected_distances,param2=pairs,param3=cone_distances,param4=loss,param5=L,param6=distances2)
-                   
+
+            loss = torch.max(selected_distances[~torch.isnan(selected_distances)]) #el maximo de los que no son nan
+
+
+            if DEBUG==True:
+                self.count_forward += 1
+                if self.count_forward % LOG_INTERVAL == 0:
+                    logger.log({
+                        "mode": self.mode,
+                        "with_cycles": self.with_cycles,
+                        "match_edges": self.match_edges,
+                        "selected_distances": selected_distances.to("cpu").detach().numpy(),
+                                "pairs": pairs,
+                                "cone_distances": cone_distances.to("cpu").detach().numpy(),
+                                "loss": loss.item(),
+                                "L": L.item(),
+                                "distances1": distances1.to("cpu").detach().numpy(),
+                                "distances2": distances2.to("cpu").detach().numpy()}, step=self.count_forward
+                                )
+
             distance_components['metrics.loss'] = loss
             distance_components['metrics.Lips'] = L   
             distance_components['metrics.MaxDx'] = torch.max(distances1) 
             distance_components['metrics.MaxDy'] = torch.max(distances2) 
             
-    ## si modo es homology , pairings con conematrix y loss maximo
-    # si modo es use_cycles, pairis comun , puede o no usar aleph, no ser full matrix , si none, matchedes o symetric 
-    # o si ciclos, sin o homoology o modo fullmatrx , random excluyente
-    #ciclos/sin ciclos con simetric o none
-    #hacer bash con los 5 experimentos
-
+        ## si modo es homology , pairings con conematrix y loss maximo
+        # si modo es use_cycles, pairis comun , puede o no usar aleph, no ser full matrix , si none, matchedes o symetric 
+        # o si ciclos, sin o homoology o modo fullmatrx , random excluyente
+        #ciclos/sin ciclos con simetric o none
+        #hacer bash con los 5 experimentos
         
         # Also count matched cycles if present
-        if self.mode == 'xy':
+        elif self.mode == 'xy':
+            pairs1 = self._get_pairings(distances1)
+            pairs2 = self._get_pairings(distances2)
+            distance_components['metrics.matched_pairs_0D'] = self._count_matching_pairs(
+                    pairs1[0], pairs2[0])
+        
             distance_components['metrics.matched_pairs_1D'] = \
                 self._count_matching_pairs(pairs1[1], pairs2[1])
             nonzero_cycles_1 = self._get_nonzero_cycles(pairs1[1])
@@ -273,68 +306,61 @@ class TopologicalSignatureDistance(nn.Module):
             distance_components['metrics.non_zero_cycles_1'] = nonzero_cycles_1
             distance_components['metrics.non_zero_cycles_2'] = nonzero_cycles_2
 
-        if self.match_edges == 'default':
-            sig1 = self._select_distances_from_pairs(distances1, pairs1)  #None no se puede usar con homology no ? debido a que los pairs es solo con la cone matrix y no con dinstance1 o 2 
-            sig2 = self._select_distances_from_pairs(distances2, pairs2)
-            loss = self.sig_error(sig1, sig2)
+            if self.match_edges == 'default':
+                sig1 = self._select_distances_from_pairs(distances1, pairs1)  #None no se puede usar con homology no ? debido a que los pairs es solo con la cone matrix y no con dinstance1 o 2 
+                sig2 = self._select_distances_from_pairs(distances2, pairs2)
+                loss = self.sig_error(sig1, sig2)
 
-        elif self.match_edges == 'fullmatrix': # que todas las distancias entre puntos se preserven
-            loss = ((distances1 - distances2)**2).sum()
+            elif self.match_edges == 'fullmatrix': # que todas las distancias entre puntos se preserven
+                loss = ((distances1 - distances2)**2).sum()
 
-        elif self.match_edges == 'symmetric':
-            sig1 = self._select_distances_from_pairs(distances1, pairs1)
-            sig2 = self._select_distances_from_pairs(distances2, pairs2)
-            # Selected pairs of 1 on distances of 2 and vice versa
-            sig1_2 = self._select_distances_from_pairs(distances2, pairs1)
-            sig2_1 = self._select_distances_from_pairs(distances1, pairs2)
+            elif self.match_edges == 'symmetric':
+                sig1 = self._select_distances_from_pairs(distances1, pairs1)
+                sig2 = self._select_distances_from_pairs(distances2, pairs2)
+                # Selected pairs of 1 on distances of 2 and vice versa
+                sig1_2 = self._select_distances_from_pairs(distances2, pairs1)
+                sig2_1 = self._select_distances_from_pairs(distances1, pairs2)
 
-            distance1_2 = self.sig_error(sig1, sig1_2)
-            distance2_1 = self.sig_error(sig2, sig2_1)
+                distance1_2 = self.sig_error(sig1, sig1_2)
+                distance2_1 = self.sig_error(sig2, sig2_1)
 
-            distance_components['metrics.distance1-2'] = distance1_2
-            distance_components['metrics.distance2-1'] = distance2_1
+                distance_components['metrics.distance1-2'] = distance1_2
+                distance_components['metrics.distance2-1'] = distance2_1
 
-            loss = distance1_2 + distance2_1
+                loss = distance1_2 + distance2_1
 
-        elif self.mode == 'random':
-            # Create random selection in oder to verify if what we are seeing
-            # is the topological constraint or an implicit latent space prior
-            # for compactness
-            n_instances = len(pairs1[0])
-            pairs1 = torch.cat([
-                torch.randperm(n_instances)[:, None],
-                torch.randperm(n_instances)[:, None]
-            ], dim=1)
-            pairs2 = torch.cat([
-                torch.randperm(n_instances)[:, None],
-                torch.randperm(n_instances)[:, None]
-            ], dim=1)
+            elif self.mode == 'random':
+                # Create random selection in oder to verify if what we are seeing
+                # is the topological constraint or an implicit latent space prior
+                # for compactness
+                n_instances = len(pairs1[0])
+                pairs1 = torch.cat([
+                    torch.randperm(n_instances)[:, None],
+                    torch.randperm(n_instances)[:, None]
+                ], dim=1)
+                pairs2 = torch.cat([
+                    torch.randperm(n_instances)[:, None],
+                    torch.randperm(n_instances)[:, None]
+                ], dim=1)
 
-            sig1_1 = self._select_distances_from_pairs(
-                distances1, (pairs1, None))
-            sig1_2 = self._select_distances_from_pairs(
-                distances2, (pairs1, None))
+                sig1_1 = self._select_distances_from_pairs(
+                    distances1, (pairs1, None))
+                sig1_2 = self._select_distances_from_pairs(
+                    distances2, (pairs1, None))
 
-            sig2_2 = self._select_distances_from_pairs(
-                distances2, (pairs2, None))
-            sig2_1 = self._select_distances_from_pairs(
-                distances1, (pairs2, None))
+                sig2_2 = self._select_distances_from_pairs(
+                    distances2, (pairs2, None))
+                sig2_1 = self._select_distances_from_pairs(
+                    distances1, (pairs2, None))
 
-            distance1_2 = self.sig_error(sig1_1, sig1_2)
-            distance2_1 = self.sig_error(sig2_1, sig2_2)
-            distance_components['metrics.distance1-2'] = distance1_2
-            distance_components['metrics.distance2-1'] = distance2_1
+                distance1_2 = self.sig_error(sig1_1, sig1_2)
+                distance2_1 = self.sig_error(sig2_1, sig2_2)
+                distance_components['metrics.distance1-2'] = distance1_2
+                distance_components['metrics.distance2-1'] = distance2_1
 
-            loss = distance1_2 + distance2_1
+                loss = distance1_2 + distance2_1
+
         if 'loss' not in locals():
             raise RuntimeError
         return loss, distance_components
 
-
-DEBUG = True
-def log(*args, **kwargs):
-    """
-    Log messages if DEBUG is True.
-    """
-    if DEBUG:
-        print(*args, **kwargs)
