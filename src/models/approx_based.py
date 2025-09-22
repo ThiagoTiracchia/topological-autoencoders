@@ -6,15 +6,17 @@ import torch.nn as nn
 from src.topology import PersistentHomologyCalculation, AlephPersistenHomologyCalculation 
 from src.models import submodules
 from src.models.base import AutoencoderModel
-from totalpersistence import utils as tp
+from totalpersistence import utilsTorch as tp
 
 
 
 
 
 import csv
+
+DEBUG = True
 class DebugLogger:
-    def __init__(self, filename="debug_log.csv"):
+    def __init__(self, filename="debug_logSpheres.csv"):
         self.filename = filename
         self.forward = 0
         self._initialize_file()
@@ -173,7 +175,7 @@ class TopologicalSignatureDistance(nn.Module):
         pairs_0, pairs_1 = pairs
         selected_distances = distance_matrix[(pairs_0[:, 0], pairs_0[:, 1])]
 
-        if self.mode == 'xy':
+        if self.mode == 'xy':####!!!        if self.use_cycles: !!!!######
             edges_1 = distance_matrix[(pairs_1[:, 0], pairs_1[:, 1])]
             edges_2 = distance_matrix[(pairs_1[:, 2], pairs_1[:, 3])]
 

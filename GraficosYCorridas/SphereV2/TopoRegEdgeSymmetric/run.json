@@ -1,0 +1,288 @@
+{
+  "artifacts": [],
+  "command": "train",
+  "experiment": {
+    "base_dir": "/workspace/src/topological-autoencoders-fork/topological-autoencoders/exp",
+    "dependencies": [
+      "numpy==2.2.6",
+      "sacred==0.8.7",
+      "torch==2.5.1+cu121"
+    ],
+    "mainfile": "train_model.py",
+    "name": "training",
+    "repositories": [
+      {
+        "commit": "e078208dafda6f9599fff47e4a1e9e56241ff410",
+        "dirty": true,
+        "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
+      },
+      {
+        "commit": "e078208dafda6f9599fff47e4a1e9e56241ff410",
+        "dirty": true,
+        "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
+      },
+      {
+        "commit": "e078208dafda6f9599fff47e4a1e9e56241ff410",
+        "dirty": true,
+        "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
+      },
+      {
+        "commit": "e078208dafda6f9599fff47e4a1e9e56241ff410",
+        "dirty": true,
+        "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
+      },
+      {
+        "commit": "e078208dafda6f9599fff47e4a1e9e56241ff410",
+        "dirty": true,
+        "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
+      },
+      {
+        "commit": "e078208dafda6f9599fff47e4a1e9e56241ff410",
+        "dirty": true,
+        "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
+      }
+    ],
+    "sources": [
+      [
+        "__init__.py",
+        "_sources/__init___d41d8cd98f00b204e9800998ecf8427e.py"
+      ],
+      [
+        "callbacks.py",
+        "_sources/callbacks_08e457bfd17174d03abd86ae713970ea.py"
+      ],
+      [
+        "ingredients/__init__.py",
+        "_sources/__init___d41d8cd98f00b204e9800998ecf8427e.py"
+      ],
+      [
+        "ingredients/dataset.py",
+        "_sources/dataset_d4947b7cad908a321c239e895ddef1de.py"
+      ],
+      [
+        "ingredients/model.py",
+        "_sources/model_770142209b37b5e4fa26509bd4bc1aee.py"
+      ],
+      [
+        "train_model.py",
+        "_sources/train_model_81fa9ed7a781c245965400cc19dafc86.py"
+      ]
+    ]
+  },
+  "heartbeat": "2025-09-22T14:00:10.554257",
+  "host": {
+    "ENV": {},
+    "cpu": "AMD Ryzen 5 5600X 6-Core Processor",
+    "gpus": {
+      "driver_version": "580.88",
+      "gpus": [
+        {
+          "model": "NVIDIA GeForce RTX 2060",
+          "persistence_mode": true,
+          "total_memory": 6144
+        }
+      ]
+    },
+    "hostname": "284513fd2080",
+    "os": [
+      "Linux",
+      "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35"
+    ],
+    "python_version": "3.10.12"
+  },
+  "meta": {
+    "command": "train",
+    "config_updates": {
+      "device": "cuda"
+    },
+    "named_configs": [
+      "experiments/myexpsv2/Spheres/TopoRegEdgeSymmetric.json"
+    ],
+    "options": {
+      "--beat-interval": null,
+      "--capture": null,
+      "--comment": null,
+      "--debug": false,
+      "--enforce_clean": false,
+      "--file_storage": "test_runs",
+      "--force": false,
+      "--help": false,
+      "--id": null,
+      "--loglevel": null,
+      "--mongo_db": null,
+      "--name": null,
+      "--pdb": false,
+      "--print-config": false,
+      "--priority": null,
+      "--queue": false,
+      "--s3": null,
+      "--sql": null,
+      "--tiny_db": null,
+      "--unobserved": false,
+      "COMMAND": null,
+      "UPDATE": [
+        "experiments/myexpsv2/Spheres/TopoRegEdgeSymmetric.json",
+        "device=cuda"
+      ],
+      "help": false,
+      "with": true
+    }
+  },
+  "resources": [],
+  "result": {
+    "training.loss": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.9804899750097519
+    },
+    "training.loss.autoencoder": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.8787522995583364
+    },
+    "training.loss.topo_error": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.2346470978726108
+    },
+    "training.metrics.distance1-2": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 1.3593397645564094
+    },
+    "training.metrics.distance2-1": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 5.210778649350936
+    },
+    "training.metrics.matched_pairs_0D": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 6.507788161993769
+    },
+    "training.reconstruction_error": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.8787522995583364
+    },
+    "validation_continuity": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20
+      ],
+      "values": "eJwBoABf/6TUz0csj+k/twOtFamq6T9GYo9NQsLpP3SDGxAa2Ok/ObPneHjo6T+vW8jEOObpP4FMYbMAyuk/0TgYwkic6T+rZrlXi3bpPw9TIWQGXOk/mhqRfpdK6T8czL9mn0HpP+zM2Wo7Pek/OwBLb5U86T/C/sIEOT3pP3GxGQ9IPuk/kGV5KcJC6T8mvC1jNEbpP+RVw9ezSek/hEIzvVhO6T/RDE1Z"
+    },
+    "validation_density_global": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.756212722101094
+    },
+    "validation_density_kl_global": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.36978612184487397
+    },
+    "validation_density_kl_global_0001": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.5179576994430501
+    },
+    "validation_density_kl_global_001": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.09327026932644056
+    },
+    "validation_density_kl_global_01": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.36978612184487397
+    },
+    "validation_density_kl_global_1": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.007342911041459882
+    },
+    "validation_density_kl_global_10": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 7.316901789803978e-05
+    },
+    "validation_mean_continuity": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.7960833101635816
+    },
+    "validation_mean_mrre": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.29459946727159225
+    },
+    "validation_mean_neighbourhood_loss": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.6971708800228744
+    },
+    "validation_mean_rank_correlation": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.17244663383154862
+    },
+    "validation_mean_trustworthiness": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.6202455313142419
+    },
+    "validation_mrre": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20,
+        2
+      ],
+      "values": "eJwBQAG//qen21QeCtg/MDHdJIQNyj/BnrfWO/7XP2XEmu3CBso/nw3nWP331z+pQ5DR0APKP2Rx7PEq8tc/APF/dpkByj9h3XE5GevXPwbTo3WfA8o/Ht3V2Cf01z8Uqt+hNBPKP/8MPVwDENg/4HPmBaI1yj/AjJVjcD3YP9l8xuttZco/ISkWIqVV2D9to0wQvZLKPzM1oKaeZ9g/NA0eLES6yj+8msPs0nbYP31MpwrB3Mo/3EyXW7mE2D+Qk3IEQPrKP4tQNQXHitg/HEr9PBMVyz8rdpSCTZHYP9HTBpiCLcs/esXqnp+Z2D+k6bUCAEXLP252uGzcntg/cpn7QSFcyz/rWj43m5/YPxBAZhXXcMs/ypxJqoee2D8bGVvvwoXLP4XyzgbMnNg/KHQIgx2ayz8stjkNbpzYP4YBJtV5rcs/aVudmA=="
+    },
+    "validation_neighbourhood_loss": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20
+      ],
+      "values": "eJwBoABf/6Ukc452K+0/I8uWhJTG6j9RjZduEoPoP5Du+a8QHOY/ZqGZE9y/4z9sBoqh9zbiPzgsniPhH+I/HQHfvJp44z8wWn4QLZvkP4RA7++ogOU/7AZrEwAx5j9y74rtwbLmP7KD8Int8+Y/HWlDG8wM5z+7bjeubAznP46RT8n+7+Y/3itok6225j+S7ZMQR3DmP7QFB3XWHeY/LBMwHXTO5T9WuVBB"
+    },
+    "validation_rank_correlation": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20
+      ],
+      "values": "eJwBoABf/xjHkn8BDn4/2NWoG1ApiD9BV2NOvGyKP37oPqzaSYg/o0+E1kqriz+ZJormXEKkP8aCQ30h9Lc/7/ZqAAifxD8oN00sh2XKPx+USG8D4c0/3GI0W+IA0D/NZdR0CI/QP7NvgvaN4tA/K9GjwXoO0T9zrPDubCnRP6O7+ikYQtE/VoLvlz090T9TnTuZeEPRP1dvZE/nUdE/X8ndHYtX0T92NEyW"
+    },
+    "validation_rmse": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 13.669117835083854
+    },
+    "validation_stress": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 15.762931067051847
+    },
+    "validation_trustworthiness": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20
+      ],
+      "values": "eJwBoABf//rk4M9rG+Q/NavHp3sz5D8EovnZVUjkP3IXK+XJXeQ/9S0E+G915D9CHELIZGXkP521TS5SJuQ/sAMcyDW94z/IxdCs95HjP0ZEsNm2eeM/XCC0Rkpq4z+PYEcDIV/jP1b8lF40bOM/Fl9oa1934z+eYc8Sa3zjP06JptCri+M/eqtR2fqp4z8ui6TFMM7jP6g9Lste9OM/z7SkS1QU5D+4vlGz"
+    }
+  },
+  "start_time": "2025-09-22T13:54:09.280346",
+  "status": "COMPLETED",
+  "stop_time": "2025-09-22T14:00:10.541303"
+}

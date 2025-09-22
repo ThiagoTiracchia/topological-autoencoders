@@ -1,0 +1,136 @@
+{
+  "artifacts": [],
+  "command": "train",
+  "experiment": {
+    "base_dir": "/workspace/src/topological-autoencoders-fork/topological-autoencoders/exp",
+    "dependencies": [
+      "numpy==2.2.6",
+      "sacred==0.8.7",
+      "torch==2.5.1+cu121"
+    ],
+    "mainfile": "train_model.py",
+    "name": "training",
+    "repositories": [
+      {
+        "commit": "e078208dafda6f9599fff47e4a1e9e56241ff410",
+        "dirty": true,
+        "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
+      },
+      {
+        "commit": "e078208dafda6f9599fff47e4a1e9e56241ff410",
+        "dirty": true,
+        "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
+      },
+      {
+        "commit": "e078208dafda6f9599fff47e4a1e9e56241ff410",
+        "dirty": true,
+        "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
+      },
+      {
+        "commit": "e078208dafda6f9599fff47e4a1e9e56241ff410",
+        "dirty": true,
+        "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
+      },
+      {
+        "commit": "e078208dafda6f9599fff47e4a1e9e56241ff410",
+        "dirty": true,
+        "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
+      },
+      {
+        "commit": "e078208dafda6f9599fff47e4a1e9e56241ff410",
+        "dirty": true,
+        "url": "https://github.com/ThiagoTiracchia/topological-autoencoders.git"
+      }
+    ],
+    "sources": [
+      [
+        "__init__.py",
+        "_sources/__init___d41d8cd98f00b204e9800998ecf8427e.py"
+      ],
+      [
+        "callbacks.py",
+        "_sources/callbacks_08e457bfd17174d03abd86ae713970ea.py"
+      ],
+      [
+        "ingredients/__init__.py",
+        "_sources/__init___d41d8cd98f00b204e9800998ecf8427e.py"
+      ],
+      [
+        "ingredients/dataset.py",
+        "_sources/dataset_d4947b7cad908a321c239e895ddef1de.py"
+      ],
+      [
+        "ingredients/model.py",
+        "_sources/model_770142209b37b5e4fa26509bd4bc1aee.py"
+      ],
+      [
+        "train_model.py",
+        "_sources/train_model_81fa9ed7a781c245965400cc19dafc86.py"
+      ]
+    ]
+  },
+  "heartbeat": "2025-09-22T14:25:31.632843",
+  "host": {
+    "ENV": {},
+    "cpu": "AMD Ryzen 5 5600X 6-Core Processor",
+    "gpus": {
+      "driver_version": "580.88",
+      "gpus": [
+        {
+          "model": "NVIDIA GeForce RTX 2060",
+          "persistence_mode": true,
+          "total_memory": 6144
+        }
+      ]
+    },
+    "hostname": "284513fd2080",
+    "os": [
+      "Linux",
+      "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35"
+    ],
+    "python_version": "3.10.12"
+  },
+  "meta": {
+    "command": "train",
+    "config_updates": {
+      "device": "cuda"
+    },
+    "named_configs": [
+      "experiments/myexpsv2/MNIST/ConoCycles.json"
+    ],
+    "options": {
+      "--beat-interval": null,
+      "--capture": null,
+      "--comment": null,
+      "--debug": false,
+      "--enforce_clean": false,
+      "--file_storage": "test_runs",
+      "--force": false,
+      "--help": false,
+      "--id": null,
+      "--loglevel": null,
+      "--mongo_db": null,
+      "--name": null,
+      "--pdb": false,
+      "--print-config": false,
+      "--priority": null,
+      "--queue": false,
+      "--s3": null,
+      "--sql": null,
+      "--tiny_db": null,
+      "--unobserved": false,
+      "COMMAND": null,
+      "UPDATE": [
+        "experiments/myexpsv2/MNIST/ConoCycles.json",
+        "device=cuda"
+      ],
+      "help": false,
+      "with": true
+    }
+  },
+  "resources": [],
+  "result": null,
+  "start_time": "2025-09-22T14:09:01.260326",
+  "status": "INTERRUPTED",
+  "stop_time": "2025-09-22T14:25:31.896140"
+}

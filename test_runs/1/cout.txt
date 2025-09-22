@@ -1,0 +1,25 @@
+INFO - training - Running command 'train'
+INFO - training - Started run with ID "1"
+Using python to compute signatures
+Epoch 0: validation.loss: 1.010 validation.loss.autoencoder: 0.924 validation.loss.topo_error: 0.171 validation.metrics.matched_pairs_0D: 5.726 validation.metrics.distance1-2: 6.514 validation.metrics.distance2-1: 15.074 validation.reconstruction_error: 0.924
+Epoch 0: testing.loss: 1.004 testing.loss.autoencoder: 0.926 testing.loss.topo_error: 0.157 testing.metrics.matched_pairs_0D: 7.169 testing.metrics.distance1-2: 5.478 testing.metrics.distance2-1: 14.258 testing.reconstruction_error: 0.926
+Epoch 1: training.loss: 0.533 +/- 0.181 training.loss.autoencoder: 0.424 +/- 0.159 training.loss.topo_error: 0.219 +/- 0.080 training.metrics.matched_pairs_0D: 8.553 +/- 3.605 training.metrics.distance1-2: 18.625 +/- 9.849 training.metrics.distance2-1: 8.941 +/- 1.166 training.reconstruction_error: 0.424 +/- 0.159
+Epoch 1: validation.loss: 0.525 validation.loss.autoencoder: 0.387 validation.loss.topo_error: 0.276 validation.metrics.matched_pairs_0D: 11.242 validation.metrics.distance1-2: 26.119 validation.metrics.distance2-1: 8.626 validation.reconstruction_error: 0.387
+Saving model to test_runs/1/model_state.pth
+Epoch 1: testing.loss: 0.494 testing.loss.autoencoder: 0.389 testing.loss.topo_error: 0.210 testing.metrics.matched_pairs_0D: 13.180 testing.metrics.distance1-2: 18.703 testing.metrics.distance2-1: 7.768 testing.reconstruction_error: 0.389
+
+Epoch 2: training.loss: 0.359 +/- 0.049 training.loss.autoencoder: 0.286 +/- 0.037 training.loss.topo_error: 0.145 +/- 0.045 training.metrics.matched_pairs_0D: 13.231 +/- 3.512 training.metrics.distance1-2: 9.641 +/- 5.539 training.metrics.distance2-1: 8.665 +/- 0.984 training.reconstruction_error: 0.286 +/- 0.037
+Epoch 2: validation.loss: 0.376 validation.loss.autoencoder: 0.295 validation.loss.topo_error: 0.164 validation.metrics.matched_pairs_0D: 15.624 validation.metrics.distance1-2: 12.870 validation.metrics.distance2-1: 7.737 validation.reconstruction_error: 0.295
+Saving model to test_runs/1/model_state.pth
+Epoch 2: testing.loss: 0.356 testing.loss.autoencoder: 0.292 testing.loss.topo_error: 0.126 testing.metrics.matched_pairs_0D: 16.960 testing.metrics.distance1-2: 9.038 testing.metrics.distance2-1: 6.891 testing.reconstruction_error: 0.292
+
+Epoch 3: training.loss: 0.336 +/- 0.055 training.loss.autoencoder: 0.268 +/- 0.048 training.loss.topo_error: 0.136 +/- 0.040 training.metrics.matched_pairs_0D: 14.815 +/- 3.335 training.metrics.distance1-2: 9.097 +/- 5.054 training.metrics.distance2-1: 8.022 +/- 0.849 training.reconstruction_error: 0.268 +/- 0.048
+Epoch 3: validation.loss: 0.337 validation.loss.autoencoder: 0.250 validation.loss.topo_error: 0.173 validation.metrics.matched_pairs_0D: 16.828 validation.metrics.distance1-2: 13.959 validation.metrics.distance2-1: 7.777 validation.reconstruction_error: 0.250
+Saving model to test_runs/1/model_state.pth
+Epoch 3: testing.loss: 0.315 testing.loss.autoencoder: 0.247 testing.loss.topo_error: 0.137 testing.metrics.matched_pairs_0D: 18.409 testing.metrics.distance1-2: 10.310 testing.metrics.distance2-1: 6.897 testing.reconstruction_error: 0.247
+
+Epoch 4: training.loss: 0.294 +/- 0.029 training.loss.autoencoder: 0.242 +/- 0.024 training.loss.topo_error: 0.105 +/- 0.024 training.metrics.matched_pairs_0D: 19.160 +/- 3.803 training.metrics.distance1-2: 5.736 +/- 2.976 training.metrics.distance2-1: 7.485 +/- 0.569 training.reconstruction_error: 0.242 +/- 0.024
+Epoch 4: validation.loss: 0.269 validation.loss.autoencoder: 0.222 validation.loss.topo_error: 0.093 validation.metrics.matched_pairs_0D: 19.236 validation.metrics.distance1-2: 4.175 validation.metrics.distance2-1: 7.572 validation.reconstruction_error: 0.222
+Saving model to test_runs/1/model_state.pth
+Epoch 4: testing.loss: 0.257 testing.loss.autoencoder: 0.218 testing.loss.topo_error: 0.078 testing.metrics.matched_pairs_0D: 20.084 testing.metrics.distance1-2: 3.151 testing.metrics.distance2-1: 6.705 testing.reconstruction_error: 0.218
+
