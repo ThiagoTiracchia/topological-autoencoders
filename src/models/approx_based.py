@@ -11,8 +11,8 @@ from totalpersistence import utilsTorch as tp
 
 import csv
 
-DEBUG = True
-LOG_INTERVAL = 1
+DEBUG = False
+LOG_INTERVAL = 1500
 
 
 def log(*args, **kwargs):
@@ -104,12 +104,12 @@ class TopologicallyRegularizedAutoencoder(AutoencoderModel):
         """
         latent = self.autoencoder.encode(x)
         self.count_forward += 1
-
-        if self.count_forward % LOG_INTERVAL == 0:
-            logger.log({
-                "x": x.to("cpu").detach().numpy(),
-                "latent": latent.to("cpu").detach().numpy()
-            }, step=self.count_forward)
+        if DEBUG ==True:
+            if self.count_forward % LOG_INTERVAL == 0:
+                logger.log({
+                    "x": x.to("cpu").detach().numpy(),
+                    "latent": latent.to("cpu").detach().numpy()
+                }, step=self.count_forward)
 
         x_distances = self._compute_distance_matrix(x)
 
@@ -173,7 +173,7 @@ class TopologicalSignatureDistance(nn.Module):
         self.with_cycles = with_cycles
         self.match_edges = match_edges
         self.count_forward = 0
-
+        use_aleph = False # tuve que agregar esto para el caso que with_cycles sea false, ya que sino sale error de que no esta declarada. 
         if self.with_cycles:
             use_aleph = True
 
@@ -183,6 +183,7 @@ class TopologicalSignatureDistance(nn.Module):
             self.signature_calculator = AlephPersistenHomologyCalculation(compute_cycles=True, sort_selected=sort_selected)
         else:
             print('Using python to compute signatures')
+            #self.signature_calculator = AlephPersistenHomologyCalculation(compute_cycles=False, sort_selected=sort_selected)
             self.signature_calculator = PersistentHomologyCalculation()
 
     def _get_pairings(self, distances):
@@ -246,7 +247,6 @@ class TopologicalSignatureDistance(nn.Module):
         distance_components = {} 
       
         loss = 0
-
         if self.mode == 'cone':
             # -TODO- cambiar interfaz , nueva variable, persistance type
             
@@ -294,8 +294,11 @@ class TopologicalSignatureDistance(nn.Module):
         
         # Also count matched cycles if present
         elif self.mode == 'xy':
+
+            
             pairs1 = self._get_pairings(distances1)
             pairs2 = self._get_pairings(distances2)
+            
             distance_components['metrics.matched_pairs_0D'] = self._count_matching_pairs(
                     pairs1[0], pairs2[0])
         
