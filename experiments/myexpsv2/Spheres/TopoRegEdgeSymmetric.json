@@ -26,6 +26,8 @@
       "autoencoder_model": "MLPAutoencoder_Spheres",
       "lam": 0.43357738971723536,
       "toposig_kwargs": {
+        "mode" : "xy",
+        "with_cycles" : true,
         "match_edges": "symmetric"
       }
     }

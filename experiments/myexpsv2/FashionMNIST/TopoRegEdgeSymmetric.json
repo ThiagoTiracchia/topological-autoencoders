@@ -26,6 +26,8 @@
       "autoencoder_model": "DeepAE",
       "lam": 2.225779055692325,
       "toposig_kwargs": {
+        "mode" : "xy",
+        "with_cycles" : true,
         "match_edges": "symmetric"
       }
     }
